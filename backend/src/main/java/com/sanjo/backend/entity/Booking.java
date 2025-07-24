@@ -23,9 +23,10 @@ public class Booking {
     @Future(message = "CheckOut date must be in future")
     private LocalDate checkOutDate;
 
-    @Min(value = 1,message = "Number of adults must not less that 1")
+    @Min(value = 1,message = "Number of adults must not less than 1")
     private int numOfAdult;
 
+    @Min(value = 0,message = "Number of children cannot not less than 0")
     private int numOfChildren;
 
     private int totalNumOfGuest;
@@ -39,4 +40,21 @@ public class Booking {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
+
+
+    public void setNumOfAdult(int numOfAdult) {
+        this.numOfAdult = numOfAdult;
+        calculateTotalNumGuest();
+    }
+
+    public void setNumOfChildren(int numOfChildren) {
+        this.numOfChildren = numOfChildren;
+        calculateTotalNumGuest();
+    }
+
+
+    public void calculateTotalNumGuest(){
+        this.totalNumOfGuest=this.numOfAdult+this.numOfChildren;
+    }
 }
+
