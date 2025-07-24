@@ -1,11 +1,8 @@
 package com.sanjo.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sanjo.backend.entity.Booking;
 import lombok.Data;
-
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
