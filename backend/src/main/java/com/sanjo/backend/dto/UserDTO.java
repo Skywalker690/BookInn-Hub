@@ -3,8 +3,6 @@ package com.sanjo.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sanjo.backend.entity.Booking;
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.util.ArrayList;
