@@ -2,6 +2,7 @@ package com.sanjo.backend.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -15,7 +16,9 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull(message = "CheckIn date is required")
     private LocalDate checkInDate;
+    @NotNull(message = "CheckOut date is required")
     private LocalDate checkOutDate;
 
     private int numOfAdult;
