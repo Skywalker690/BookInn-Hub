@@ -2,6 +2,7 @@ package com.sanjo.backend.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -18,7 +19,7 @@ public class Booking {
 
     @NotNull(message = "CheckIn date is required")
     private LocalDate checkInDate;
-    @NotNull(message = "CheckOut date is required")
+    @Future(message = "CheckOut date must be in future")
     private LocalDate checkOutDate;
 
     private int numOfAdult;
