@@ -1,4 +1,4 @@
 package com.sanjo.backend.repository;
 
-public interface UserRepository {
+public interface RoomRepository {
 }
