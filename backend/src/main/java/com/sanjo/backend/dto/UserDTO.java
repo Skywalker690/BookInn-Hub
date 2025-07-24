@@ -16,7 +16,7 @@ public class UserDTO {
     private String email;
     private String name;
     private String phoneNumber;
-    private List<Booking> bookings = new ArrayList<>();
+    private List<BookingDTO> bookings = new ArrayList<>();
 }
 
 //Exposing role and password
