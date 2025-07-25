@@ -93,6 +93,12 @@
 			<artifactId>aws-java-sdk-s3</artifactId>
 			<version>1.12.788</version>
 		</dependency>
+		<!--For Interacting with env files-->
+		<dependency>
+			<groupId>me.paulschwarz</groupId>
+			<artifactId>spring-dotenv</artifactId>
+			<version>2.5.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>
