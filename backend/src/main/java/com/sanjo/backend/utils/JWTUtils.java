@@ -9,12 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.util.Date;
 
 @Service
 public class JWTUtils {
 
     private static final long EXPIRATION_TIME = 1000 * 60 * 24 * 7; // 7 days
-    private SecretKey key;
+    private SecretKey Key;
 
     @Value("${jwt.secret}")
     private String secretString;
@@ -22,8 +23,15 @@ public class JWTUtils {
     @PostConstruct
     public void init() {
         byte[] keyBytes = Decoders.BASE64.decode(secretString);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.Key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-
+    public String generateToken(UserDetails userDetails){
+        return Jwts.builder()
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(Key)
+                .compact();
+    }
 }
