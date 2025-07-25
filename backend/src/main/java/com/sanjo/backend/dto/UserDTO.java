@@ -2,7 +2,6 @@ package com.sanjo.backend.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sanjo.backend.entity.Booking;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -19,4 +18,4 @@ public class UserDTO {
     private List<BookingDTO> bookings = new ArrayList<>();
 }
 
-//Exposing role and password
+//To Prevent Exposing role and password
