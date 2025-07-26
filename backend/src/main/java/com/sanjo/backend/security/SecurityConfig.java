@@ -26,27 +26,49 @@ public class SecurityConfig {
     private final CustomUserDetailsService userService;
     private final JWTAuthFilter jwtAuthFilter;
 
+    // Constructor to inject dependencies
     public SecurityConfig(CustomUserDetailsService userService, JWTAuthFilter jwtAuthFilter) {
         this.userService = userService;
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
+    /**
+     * Main security configuration.
+     * Configures the HTTP security, public endpoints, session policy, and JWT filter.
+     */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+
+        httpSecurity
+                // Disable CSRF for APIs
+                .csrf(AbstractHttpConfigurer::disable)
+
+                // Enable default CORS settings
                 .cors(Customizer.withDefaults())
+
+                // Authorize requests
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**","/rooms/**","/bookings/**").permitAll()
-                        .anyRequest().authenticated())
-                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .requestMatchers("/auth/**", "/rooms/**", "/bookings/**").permitAll()  // Public endpoints
+                        .anyRequest().authenticated()  // All other endpoints require authentication
+                )
+
+                // Use stateless session (important for JWT)
+                .sessionManagement(manager ->
+                        manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+
+                // Use custom authentication provider
                 .authenticationProvider(authenticationProvider())
+
+                // Add JWT authentication filter before Spring's default filter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
-
-
-
     }
+
+    /**
+     * Authentication provider that uses the custom UserDetailsService and password encoder.
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
@@ -55,13 +77,20 @@ public class SecurityConfig {
         return daoAuthenticationProvider;
     }
 
+    /**
+     * BCrypt password encoder for secure password hashing.
+     */
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Authentication manager to be used for processing login requests.
+     */
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
