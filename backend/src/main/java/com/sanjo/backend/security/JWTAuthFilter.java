@@ -1,6 +1,6 @@
 package com.sanjo.backend.security;
 
-import com.sanjo.backend.service.CustomUserService;
+import com.sanjo.backend.service.CustomUserDetailsService;
 import com.sanjo.backend.utils.JWTUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,9 +21,9 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
     // Injecting JWT utility class and custom UserDetailsService
     private final JWTUtils jwtUtils;
-    private final CustomUserService customUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    public JWTAuthFilter(JWTUtils jwtUtils, CustomUserService customUserDetailsService) {
+    public JWTAuthFilter(JWTUtils jwtUtils, CustomUserDetailsService customUserDetailsService) {
         this.jwtUtils = jwtUtils;
         this.customUserDetailsService = customUserDetailsService;
     }
