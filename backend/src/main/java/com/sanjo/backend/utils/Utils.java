@@ -1,14 +1,11 @@
 package com.sanjo.backend.utils;
 
-
-
 import com.sanjo.backend.dto.BookingDTO;
 import com.sanjo.backend.dto.RoomDTO;
 import com.sanjo.backend.dto.UserDTO;
 import com.sanjo.backend.entity.Booking;
 import com.sanjo.backend.entity.Room;
 import com.sanjo.backend.entity.User;
-
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,8 +71,12 @@ public class Utils {
         roomDTO.setRoomPhotoUrl(room.getRoomPhotoUrl());
         roomDTO.setRoomDescription(room.getRoomDescription());
 
+        //If Room has Booking then to convert it into List<Booking> by calling mapBookingEntityToBookingDTO()
         if (room.getBookings() != null) {
-            roomDTO.setBookings(room.getBookings().stream().map(Utils::mapBookingEntityToBookingDTO).collect(Collectors.toList()));
+            roomDTO.setBookings(room.getBookings()
+                    .stream()
+                    .map(Utils::mapBookingEntityToBookingDTO)
+                    .collect(Collectors.toList()));
         }
         return roomDTO;
     }
@@ -91,6 +92,7 @@ public class Utils {
         bookingDTO.setNumOfChildren(booking.getNumOfChildren());
         bookingDTO.setTotalNumOfGuest(booking.getTotalNumOfGuest());
         bookingDTO.setBookingConfirmationCode(booking.getBookingConfirmationCode());
+
         if (mapUser) {
             bookingDTO.setUser(Utils.mapUserEntityToUserDTO(booking.getUser()));
         }
@@ -117,7 +119,10 @@ public class Utils {
         userDTO.setRole(user.getRole());
 
         if (!user.getBookings().isEmpty()) {
-            userDTO.setBookings(user.getBookings().stream().map(booking -> mapBookingEntityToBookingDTOPlusBookedRooms(booking, false)).collect(Collectors.toList()));
+            userDTO.setBookings(user.getBookings()
+                    .stream()
+                    .map(booking -> mapBookingEntityToBookingDTOPlusBookedRooms(booking, false))
+                    .collect(Collectors.toList()));
         }
         return userDTO;
     }
