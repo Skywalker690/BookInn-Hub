@@ -1,6 +1,5 @@
 package com.sanjo.backend.entity;
 
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
@@ -16,17 +15,18 @@ public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @NotNull(message = "CheckIn date is required")
+    @NotNull(message = "check in date is required")
     private LocalDate checkInDate;
-    @Future(message = "CheckOut date must be in future")
+
+    @Future(message = "check out date must be in the future")
     private LocalDate checkOutDate;
 
-    @Min(value = 1,message = "Number of adults must not less than 1")
-    private int numOfAdult;
+    @Min(value = 1, message = "Number of adults must not be less that 1")
+    private int numOfAdults;
 
-    @Min(value = 0,message = "Number of children cannot not less than 0")
+    @Min(value = 0, message = "Number of children must not be less that 0")
     private int numOfChildren;
 
     private int totalNumOfGuest;
@@ -41,20 +41,18 @@ public class Booking {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    public void calculateTotalNumberOfGuest() {
+        this.totalNumOfGuest = this.numOfAdults + this.numOfChildren;
+    }
 
-    public void setNumOfAdult(int numOfAdult) {
-        this.numOfAdult = numOfAdult;
-        calculateTotalNumGuest();
+    public void setNumOfAdults(int numOfAdults) {
+        this.numOfAdults = numOfAdults;
+        calculateTotalNumberOfGuest();
     }
 
     public void setNumOfChildren(int numOfChildren) {
         this.numOfChildren = numOfChildren;
-        calculateTotalNumGuest();
-    }
-
-
-    public void calculateTotalNumGuest(){
-        this.totalNumOfGuest=this.numOfAdult+this.numOfChildren;
+        calculateTotalNumberOfGuest();
     }
 
     @Override
@@ -63,11 +61,10 @@ public class Booking {
                 "id=" + id +
                 ", checkInDate=" + checkInDate +
                 ", checkOutDate=" + checkOutDate +
-                ", numOfAdult=" + numOfAdult +
+                ", numOfAdults=" + numOfAdults +
                 ", numOfChildren=" + numOfChildren +
                 ", totalNumOfGuest=" + totalNumOfGuest +
                 ", bookingConfirmationCode='" + bookingConfirmationCode + '\'' +
                 '}';
     }
 }
-
