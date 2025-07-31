@@ -57,4 +57,10 @@ public class RoomController {
         Response response = roomService.getRoomById(roomId);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
+    @GetMapping("/all-available-rooms")
+    public ResponseEntity<Response> getAvailableRooms() {
+        Response response = roomService.getAllAvailableRooms();
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
 }
