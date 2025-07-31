@@ -21,13 +21,11 @@ import java.util.List;
 public class BookingService implements IBookingService {
 
     private final BookingRepository bookingRepository;
-    private final IRoomService roomService;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
 
-    public BookingService(BookingRepository bookingRepository, IRoomService roomService, RoomRepository roomRepository, UserRepository userRepository) {
+    public BookingService(BookingRepository bookingRepository, RoomRepository roomRepository, UserRepository userRepository) {
         this.bookingRepository = bookingRepository;
-        this.roomService = roomService;
         this.roomRepository = roomRepository;
         this.userRepository = userRepository;
     }
