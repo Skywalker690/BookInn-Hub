@@ -29,6 +29,13 @@ public class BookingController {
 
     }
 
+    @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Response> getAllBookings() {
+        Response response = bookingService.getAllBookings();
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
 
 
 
