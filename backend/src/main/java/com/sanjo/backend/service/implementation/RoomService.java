@@ -37,22 +37,18 @@ public class RoomService implements IRoomService {
         Response response = new Response();
         try {
             Room room = new Room();
-            String imageUrl =awsS3Service.saveImageToS3(photo);
+            String imageUrl = awsS3Service.saveImageToS3(photo);
             room.setRoomPhotoUrl(imageUrl);
             room.setRoomType(roomType);
             room.setRoomDescription(description);
             room.setRoomPrice(roomPrice);
 
-            Room savedRoom =roomRepository.save(room);
-            RoomDTO dto =Utils.mapRoomEntityToRoomDTO(savedRoom);
+            Room savedRoom = roomRepository.save(room);
+            RoomDTO dto = Utils.mapRoomEntityToRoomDTO(savedRoom);
 
             response.setStatusCode(200);
             response.setMessage("Successful");
-
-
-        }catch (OurException e) {
-            response.setStatusCode(400);
-            response.setMessage(e.getMessage());
+            response.setRoom(dto);
         }
         catch (Exception e) {
             response.setStatusCode(500);
@@ -63,7 +59,8 @@ public class RoomService implements IRoomService {
 
     @Override
     public List<String> getAllRoomTypes() {
-        return List.of();
+
+        return roomRepository.findDistinctRoomTypes();
     }
 
     @Override
