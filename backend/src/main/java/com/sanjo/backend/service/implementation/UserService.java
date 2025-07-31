@@ -47,7 +47,7 @@ public class UserService implements IUserService {
             User savedUser = userRepository.save(user);
 
             UserDTO userDTO = Utils.mapUserEntityToUserDTO(savedUser);
-            response.setStatusCode(400);
+            response.setStatusCode(200);
             response.setUser(userDTO);
 
         }catch (OurException e) {
@@ -64,28 +64,29 @@ public class UserService implements IUserService {
 
     @Override
     public Response login(LoginRequest loginRequest) {
-        Response response = new Response();
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword()));
-            var user=userRepository.findByEmail(loginRequest.getEmail()).orElseThrow( () -> new OurException("User not Found"));
 
-            var token = new JWTUtils().generateToken(user);
+        Response response = new Response();
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            var user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new OurException("user Not found"));
+
+            var token = jwtUtils.generateToken(user);
             response.setStatusCode(200);
             response.setToken(token);
             response.setRole(user.getRole());
             response.setExpirationTime("7 Days");
-            response.setMessage("Successful");
+            response.setMessage("successful");
 
-
-        }catch (OurException e) {
-            response.setStatusCode(400);
+        } catch (OurException e) {
+            response.setStatusCode(404);
             response.setMessage(e.getMessage());
-        }
-        catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error Occurred During User Logging "+e.getMessage());
-        }
 
+        } catch (Exception e) {
+
+            response.setStatusCode(500);
+            response.setMessage("Error Occurred During USer Login " + e.getMessage());
+        }
         return response;
     }
 

@@ -8,7 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/rooms")
+@RequestMapping("/bookings")
 public class BookingController {
 
     private final IBookingService bookingService;
