@@ -92,6 +92,25 @@ public class UserService implements IUserService {
     @Override
     public Response getAllUsers() {
 
+        Response response = new Response();
+        try {
+
+            List<User> userList = userRepository.findAll();
+            List<UserDTO> userDTOList =Utils.mapUserListEntityToUserListDTO(userList);
+            response.setStatusCode(200);
+            response.setMessage("Successful");
+            response.setUserList(userDTOList);
+
+
+        }catch (OurException e) {
+            response.setStatusCode(400);
+            response.setMessage(e.getMessage());
+        }
+        catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error Occurred While Getting All Users "+e.getMessage());
+        }
+        return response;
 
     }
 
