@@ -4,93 +4,77 @@ import com.sanjo.backend.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 @Configuration
-@EnableMethodSecurity
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsService userService;
     private final JWTAuthFilter jwtAuthFilter;
 
-    // Constructor to inject dependencies
+    // Constructor-based dependency injection
     public SecurityConfig(CustomUserDetailsService userService, JWTAuthFilter jwtAuthFilter) {
         this.userService = userService;
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
     /**
-     * Main security configuration.
-     * Configures the HTTP security, public endpoints, session policy, and JWT filter.
+     * Configures Spring Security's HTTP settings using the modern lambda-style DSL.
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
-        httpSecurity
-                // Disable CSRF for APIs
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                // Disable CSRF (not needed for JWT-based stateless APIs)
                 .csrf(AbstractHttpConfigurer::disable)
 
-                // Enable default CORS settings
+                // Enable default CORS configuration
                 .cors(Customizer.withDefaults())
 
-                // Authorize requests
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**", "/rooms/**", "/bookings/**").permitAll()  // Public endpoints
-                        .anyRequest().authenticated()  // All other endpoints require authentication
+                // Configure route-level security
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**", "/rooms/**", "/bookings/**").permitAll() // Public routes
+                        .anyRequest().authenticated() // All other routes require authentication
                 )
 
-                // Use stateless session (important for JWT)
-                .sessionManagement(manager ->
-                        manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                // Configure stateless session management for JWT
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // Use custom authentication provider
-                .authenticationProvider(authenticationProvider())
+                // Register custom UserDetailsService for authentication
+                .userDetailsService(userService)
 
-                // Add JWT authentication filter before Spring's default filter
+                // Register custom JWT filter before the built-in auth filter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return httpSecurity.build();
+        return http.build();
     }
 
     /**
-     * Authentication provider that uses the custom UserDetailsService and password encoder.
+     * Exposes the AuthenticationManager to be used in controllers/services.
      */
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        return daoAuthenticationProvider;
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     /**
-     * BCrypt password encoder for secure password hashing.
+     * BCrypt password encoder bean to hash and verify passwords securely.
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    /**
-     * Authentication manager to be used for processing login requests.
-     */
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
     }
 }
