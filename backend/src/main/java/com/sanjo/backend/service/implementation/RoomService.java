@@ -13,6 +13,7 @@ import com.sanjo.backend.service.AwsS3Service;
 import com.sanjo.backend.service.interfac.IRoomService;
 import com.sanjo.backend.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
@@ -65,7 +66,20 @@ public class RoomService implements IRoomService {
 
     @Override
     public Response getAllRooms() {
-        return null;
+        Response response = new Response();
+        try {
+            List<Room> rooms =roomRepository.findAll(Sort.by(Sort.Direction.DESC,"id"));
+            List<RoomDTO> dto =Utils.mapRoomListEntityToRoomListDTO(rooms);
+
+            response.setStatusCode(200);
+            response.setMessage("Successful");
+            response.setRoomList(dto);
+        }
+        catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error Occurred While Adding Room "+e.getMessage());
+        }
+        return response;
     }
 
     @Override
