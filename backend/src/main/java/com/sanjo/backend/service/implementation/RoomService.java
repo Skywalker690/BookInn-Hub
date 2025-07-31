@@ -84,7 +84,25 @@ public class RoomService implements IRoomService {
 
     @Override
     public Response deleteRoom(Long roomId) {
-        return null;
+        Response response = new Response();
+
+        try {
+            Room room = roomRepository.findById(roomId).orElseThrow(() ->
+                    new OurException("User not found"));
+            roomRepository.deleteById(roomId);
+
+            response.setStatusCode(200);
+            response.setMessage("Successful");
+
+        }catch (OurException e) {
+            response.setStatusCode(404);
+            response.setMessage(e.getMessage());
+        }
+        catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error Occurred While Getting Deleting User "+e.getMessage());
+        }
+        return response;
     }
 
     @Override
