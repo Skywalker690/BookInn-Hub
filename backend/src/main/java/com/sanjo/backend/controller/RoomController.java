@@ -94,4 +94,12 @@ public class RoomController {
         Response response = roomService.updateRoom(roomId, roomDescription, roomType, roomPrice, photo);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
+    @DeleteMapping("/delete/{roomId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Response> deleteRoom(@PathVariable Long roomId) {
+        Response response = roomService.deleteRoom(roomId);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+
+    }
 }
