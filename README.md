@@ -1,4 +1,5 @@
-[![wakatime](https://wakatime.com/badge/user/0d5ab76c-6ee3-49e6-8838-6d977be50546/project/a4fdaa95-e785-4b7a-af59-da3757c5d202.svg)](https://wakatime.com/badge/user/0d5ab76c-6ee3-49e6-8838-6d977be50546/project/a4fdaa95-e785-4b7a-af59-da3757c5d202)
+[![wakatime](https://wakatime.com/badge/user/0d5ab76c-6ee3-49e6-8838-6d977be50546/project/2fd31973-e9fb-439d-9a77-62f8a6932787.svg)](https://wakatime.com/badge/user/0d5ab76c-6ee3-49e6-8838-6d977be50546/project/2fd31973-e9fb-439d-9a77-62f8a6932787)
+
 
 # 🚧 BookInn Hub – Hotel Management & Booking App
 
